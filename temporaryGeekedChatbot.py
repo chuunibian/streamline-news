@@ -78,12 +78,12 @@ async def get_top_headlines_country(ctx: RunContext[Deps], country: str) -> News
     params = {
         'country': country.lower(),
         'apikey': ctx.deps.news_api_key,
-        'pageSize': 3,
+        'pageSize': 10,
     }
 
     response = await ctx.deps.client.get("https://newsapi.org/v2/top-headlines", params=params)
     response.raise_for_status() # Auto raise exe if bad err code
-    response_data = NewsAPIResponse.model_validate(response.json())
+    response_data = NewsAPIResponse.model_validate(response.json()) # validate jsonic response
 
     return response_data
 
@@ -93,7 +93,7 @@ async def get_top_headlines_source(ctx: RunContext[Deps], source: str) -> NewsAP
     # makesure arguement var names match api ones
     params = {
         'apikey': ctx.deps.news_api_key,
-        'pageSize': 3,
+        'pageSize': 10,
         'sources': source
     }
 
@@ -112,7 +112,7 @@ async def get_top_headlines_query(ctx: RunContext[Deps], query: str) -> NewsAPIR
     # makesure arguement var names match api ones
     params = {
         'apikey': ctx.deps.news_api_key,
-        'pageSize': 3,
+        'pageSize': 10,
         'q': query
     }
 

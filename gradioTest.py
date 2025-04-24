@@ -21,7 +21,12 @@ deps: Deps = Deps(client = client, news_api_key=NEWS_API_KEY)
 
 async def process_prompt(message, history):
     result = await news_agent.run(message, deps=deps)
-    return "Sorry, the message resulted either in 0 articles or was unrelated/malformed" if len(result.data.articles) == 0 else result.data.articles[0].title
+    if result.data.articles:
+        temp_titles = (article.title for article in result.data.articles) # () is generator [] is list since .join can use generator we can use it for peforamnce increase
+        result = "\n".join(temp_titles) # join each item in list
+        return result
+    else:
+        return "Sorry, the message resulted either in 0 articles or was unrelated/malformed"
 
 gr.ChatInterface(
     fn = process_prompt,
